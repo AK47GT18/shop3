@@ -68,7 +68,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Login"
-        android:padding="12dp"/>
+        android:padding="12dp"
+        android:backgroundTint="@color/black"/>
 
     <TextView
         android:id="@+id/forgotPasswordText"
@@ -76,7 +77,7 @@
         android:layout_height="wrap_content"
         android:text="Forgot Password?"
         android:layout_marginTop="16dp"
-        android:textColor="@color/design_default_color_primary"/>
+        android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/signUpText"
@@ -84,6 +85,6 @@
         android:layout_height="wrap_content"
         android:text="Don't have an account? Sign Up"
         android:layout_marginTop="16dp"
-        android:textColor="@color/design_default_color_primary"/>
+        android:textColor="@color/black"/>
 
 </LinearLayout>

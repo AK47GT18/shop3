@@ -1,6 +1,0 @@
-<style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
-    <!-- Customize your theme here -->
-    <item name="colorPrimary">@colors/colorPrimary</item>
-    <item name="colorSecondary">@color</item>
-    <!-- Other theme customizations -->
-</style>

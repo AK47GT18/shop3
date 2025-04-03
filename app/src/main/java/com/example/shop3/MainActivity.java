@@ -76,4 +76,5 @@ package com.example.shop3;
             public boolean onSupportNavigateUp() {
                 return navController != null && navController.navigateUp() || super.onSupportNavigateUp();
             }
+
         }

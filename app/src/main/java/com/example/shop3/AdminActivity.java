@@ -1,5 +1,4 @@
-// AdminActivity.java
-    package com.example.shop3;
+package com.example.shop3;
 
     import android.content.Intent;
     import android.net.Uri;

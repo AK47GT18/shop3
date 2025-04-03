@@ -98,7 +98,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Sign Up"
-                android:padding="12dp"/>
+                android:padding="12dp"
+                android:backgroundTint="@color/black"/>
 
             <TextView
                 android:id="@+id/loginText"
@@ -106,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:text="Already have an account? Login"
                 android:layout_marginTop="16dp"
-                android:textColor="@color/design_default_color_primary"/>
+                android:textColor="@color/black"/>
 
         </LinearLayout>
     </ScrollView>

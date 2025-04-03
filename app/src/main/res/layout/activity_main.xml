@@ -9,12 +9,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.google.android.material.search.SearchView
-                android:id="@+id/searchView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Search"
-                app:layout_scrollFlags="scroll|enterAlways"/>
+           <com.google.android.material.search.SearchView
+                    android:id="@+id/searchView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/search_hint"
+                    app:layout_constraintTop_toTopOf="parent"
+                    style="@style/Widget.Material3.SearchView" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
