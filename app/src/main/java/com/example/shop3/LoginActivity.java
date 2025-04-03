@@ -111,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (task.isSuccessful()) {
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                    finish();
+                    //finish();
                 } else {
                     Toast.makeText(LoginActivity.this,
                         "Authentication failed: " + task.getException().getMessage(),

@@ -12,10 +12,11 @@ package com.example.shop3;
         import com.google.firebase.firestore.FirebaseFirestore;
         import com.google.android.material.badge.BadgeDrawable;
 
-        public class MainActivity extends Shop3Application {
+        public class MainActivity extends AppCompatActivity {
             private NavController navController;
             private BottomNavigationView bottomNavigation;
             private SearchView searchView;
+            private FirebaseAuth mAuth;
 
             @Override
             protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +26,7 @@ package com.example.shop3;
                 initViews();
                 setupNavigation();
                 setupSearchView();
-                //FirebaseApp.initializeApp(this);
+               // mAuth = FirebaseAuth.getInstance();
             }
 
             private void initViews() {
