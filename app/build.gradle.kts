@@ -57,12 +57,12 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
     implementation("com.google.firebase:firebase-storage-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.firebase:firebase-firestore:24.10.0")
-
+    implementation("com.google.firebase:firebase-database-ktx") // Add this for Realtime Database
 
     // Lottie Animation
     implementation("com.airbnb.android:lottie:6.6.2")
     implementation(libs.firebase.storage)
+    implementation(libs.firebase.database)
 
     // Testing
     testImplementation(libs.junit)

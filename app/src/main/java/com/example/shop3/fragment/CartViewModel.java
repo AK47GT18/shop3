@@ -6,18 +6,24 @@ import androidx.lifecycle.ViewModel;
 import com.example.shop3.model.CartItem;
 import com.example.shop3.model.Product;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CartViewModel extends ViewModel {
     private final MutableLiveData<List<CartItem>> cartItems = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    private final DatabaseReference database;
+    private final String userId;
 
     public CartViewModel() {
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        database = FirebaseDatabase.getInstance().getReference()
+            .child("users").child(userId).child("cart");
         loadCartItems();
     }
 
@@ -31,32 +37,30 @@ public class CartViewModel extends ViewModel {
 
     private void loadCartItems() {
         isLoading.setValue(true);
-        db.collection("users").document(userId)
-            .collection("cart")
-            .addSnapshotListener((value, error) -> {
-                if (error != null) {
-                    isLoading.setValue(false);
-                    return;
-                }
-
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 List<CartItem> items = new ArrayList<>();
-                if (value != null) {
-                    for (QueryDocumentSnapshot document : value) {
-                        CartItem item = document.toObject(CartItem.class);
-                        item.setId(document.getId());
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    CartItem item = snapshot.getValue(CartItem.class);
+                    if (item != null) {
+                        item.setId(snapshot.getKey());
                         items.add(item);
                     }
                 }
                 cartItems.setValue(items);
                 isLoading.setValue(false);
-            });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                isLoading.setValue(false);
+            }
+        });
     }
 
     public void removeFromCart(CartItem cartItem) {
-        db.collection("users").document(userId)
-            .collection("cart")
-            .document(cartItem.getId())
-            .delete();
+        database.child(cartItem.getId()).removeValue();
     }
 
     public void updateQuantity(CartItem cartItem, int quantity) {
@@ -64,27 +68,16 @@ public class CartViewModel extends ViewModel {
             removeFromCart(cartItem);
             return;
         }
-
-        db.collection("users").document(userId)
-            .collection("cart")
-            .document(cartItem.getId())
-            .update("quantity", quantity);
+        database.child(cartItem.getId()).child("quantity").setValue(quantity);
     }
 
     public void clearCart() {
-        List<CartItem> items = cartItems.getValue();
-        if (items != null) {
-            for (CartItem item : items) {
-                removeFromCart(item);
-            }
-        }
+        database.removeValue();
     }
 
     public void addToCart(Product product) {
         CartItem cartItem = new CartItem(product, 1);
-        db.collection("users").document(userId)
-            .collection("cart")
-            .add(cartItem);
+        database.push().setValue(cartItem);
     }
 
     public double calculateTotal() {

@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.example.storix", appContext.getPackageName());
+        assertEquals("com.exa,ple.shop3", appContext.getPackageName());
     }
 }

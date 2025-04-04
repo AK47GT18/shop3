@@ -8,45 +8,49 @@ import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-        import com.example.shop3.R;
+import com.example.shop3.R;
 import com.example.shop3.Adapter.ProductAdapter;
 import com.example.shop3.model.Product;
 import com.google.android.material.slider.RangeSlider;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DatabaseReference;
 import java.util.ArrayList;
 import java.util.List;
 import android.text.TextWatcher;
 import android.text.Editable;
-import com.google.firebase.firestore.DocumentSnapshot;
-import android.widget.Toast;
+
 public class SearchFragment extends Fragment {
     private TextInputEditText searchEditText;
     private MaterialAutoCompleteTextView categorySpinner;
     private RangeSlider priceRangeSlider;
     private RecyclerView productsRecyclerView;
     private ProductAdapter productAdapter;
-    private FirebaseFirestore db;
+    private DatabaseReference database;
+    private SearchViewModel viewModel;
     private List<Product> productList;
     private float minPrice = 0f;
     private float maxPrice = 10000f;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_search, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, 
+                            Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
+        initViews(view);
+        setupViews();
+        initDatabase();
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initViews(view);
-        setupViews();
-        initFirestore();
-        loadProducts();
+        viewModel = new ViewModelProvider(this).get(SearchViewModel.class);
+        setupObservers();
     }
 
     private void initViews(View view) {
@@ -57,6 +61,10 @@ public class SearchFragment extends Fragment {
     }
 
     private void setupViews() {
+        productAdapter = new ProductAdapter(new ArrayList<>());
+        productsRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        productsRecyclerView.setAdapter(productAdapter);
+
         // Setup category spinner
         String[] categories = {"All Categories", "Electronics", "Clothing", "Books", "Home & Kitchen"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
@@ -68,12 +76,6 @@ public class SearchFragment extends Fragment {
         priceRangeSlider.setValueTo(maxPrice);
         priceRangeSlider.setValues(minPrice, maxPrice);
 
-        // Setup RecyclerView
-        productList = new ArrayList<>();
-        productAdapter = new ProductAdapter(productList);
-        productsRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-        productsRecyclerView.setAdapter(productAdapter);
-
         // Setup listeners
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -81,77 +83,39 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filterProducts();
+                performSearch();
             }
 
             @Override
             public void afterTextChanged(Editable s) {}
         });
 
-        categorySpinner.setOnItemClickListener((parent, view, position, id) -> filterProducts());
+        categorySpinner.setOnItemClickListener((parent, view, position, id) -> performSearch());
 
         priceRangeSlider.addOnChangeListener((slider, value, fromUser) -> {
             if (fromUser) {
-                filterProducts();
+                performSearch();
             }
         });
     }
 
-    private void initFirestore() {
-        db = FirebaseFirestore.getInstance();
+    private void initDatabase() {
+        database = FirebaseDatabase.getInstance().getReference().child("products");
     }
 
-    private void loadProducts() {
-        db.collection("products")
-            .orderBy("name")
-            .get()
-            .addOnSuccessListener(queryDocumentSnapshots -> {
-                productList.clear();
-                for (DocumentSnapshot document : queryDocumentSnapshots) {
-                    Product product = document.toObject(Product.class);
-                    if (product != null) {
-                        product.setId(document.getId());
-                        productList.add(product);
-                    }
-                }
-                productAdapter.notifyDataSetChanged();
-            })
-            .addOnFailureListener(e ->
-                Toast.makeText(requireContext(), "Error loading products", Toast.LENGTH_SHORT).show());
-    }
-
-    private void filterProducts() {
-        String searchQuery = searchEditText.getText().toString().toLowerCase().trim();
-        String selectedCategory = categorySpinner.getText().toString();
-        List<Float> priceRange = priceRangeSlider.getValues();
-        float minSelectedPrice = priceRange.get(0);
-        float maxSelectedPrice = priceRange.get(1);
-
-        Query query = db.collection("products");
-
-        if (!selectedCategory.equals("All Categories")) {
-            query = query.whereEqualTo("category", selectedCategory);
-        }
-
-        query.get().addOnSuccessListener(queryDocumentSnapshots -> {
-            List<Product> filteredList = new ArrayList<>();
-            for (DocumentSnapshot document : queryDocumentSnapshots) {
-                Product product = document.toObject(Product.class);
-                if (product != null) {
-                    product.setId(document.getId());
-                    boolean matchesSearch = product.getName().toLowerCase().contains(searchQuery) ||
-                                         product.getDescription().toLowerCase().contains(searchQuery);
-                    boolean matchesPrice = product.getPrice() >= minSelectedPrice &&
-                                         product.getPrice() <= maxSelectedPrice;
-
-                    if (matchesSearch && matchesPrice) {
-                        filteredList.add(product);
-                    }
-                }
-            }
-            productList.clear();
-            productList.addAll(filteredList);
-            productAdapter.notifyDataSetChanged();
+    private void setupObservers() {
+        viewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
+            productAdapter.setProducts(products);
         });
+
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            // Handle loading state
+        });
+    }
+
+    private void performSearch() {
+        String query = searchEditText.getText().toString();
+        String category = categorySpinner.getText().toString();
+        viewModel.searchProducts(query, category, minPrice, maxPrice);
     }
 }

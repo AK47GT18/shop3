@@ -11,7 +11,8 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DatabaseReference;
 import com.example.shop3.helpers.ValidationHelper;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +22,7 @@ public class SignupActivity extends AppCompatActivity {
     private TextInputEditText nameEditText, emailEditText, passwordEditText, confirmPasswordEditText;
     private MaterialButton signUpButton;
     private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private void initFirebase() {
         mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
     private void initViews() {
@@ -143,15 +144,15 @@ public class SignupActivity extends AppCompatActivity {
         mAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    // Save additional user data to Firestore
+                    // Save additional user data to Realtime Database
                     String userId = mAuth.getCurrentUser().getUid();
                     Map<String, Object> user = new HashMap<>();
                     user.put("name", name);
                     user.put("email", email);
                     user.put("createdAt", System.currentTimeMillis());
 
-                    db.collection("users").document(userId)
-                        .set(user)
+                    mDatabase.child("users").child(userId)
+                        .setValue(user)
                         .addOnSuccessListener(aVoid -> {
                             Toast.makeText(SignupActivity.this,
                                 "Account created successfully", Toast.LENGTH_SHORT).show();

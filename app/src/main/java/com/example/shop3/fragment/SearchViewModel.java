@@ -1,67 +1,70 @@
 // SearchViewModel.java
-        package com.example.shop3.fragment;
+package com.example.shop3.fragment;
 
-        import androidx.lifecycle.LiveData;
-        import androidx.lifecycle.MutableLiveData;
-        import androidx.lifecycle.ViewModel;
-        import com.example.shop3.model.Product;
-        import com.google.firebase.firestore.FirebaseFirestore;
-        import com.google.firebase.firestore.QuerySnapshot;
-        import java.util.ArrayList;
-        import java.util.List;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+import com.example.shop3.model.Product;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import java.util.ArrayList;
+import java.util.List;
 
-        public class SearchViewModel extends ViewModel {
-            private final MutableLiveData<List<Product>> products = new MutableLiveData<>(new ArrayList<>());
-            private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
-            private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+public class SearchViewModel extends ViewModel {
+    private final MutableLiveData<List<Product>> products = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
+    private final DatabaseReference database;
 
-            public LiveData<List<Product>> getProducts() {
-                return products;
-            }
+    public SearchViewModel() {
+        database = FirebaseDatabase.getInstance().getReference().child("products");
+    }
 
-            public LiveData<Boolean> getIsLoading() {
-                return isLoading;
-            }
+    public LiveData<List<Product>> getProducts() {
+        return products;
+    }
 
-            public void searchProducts(String query, String category, float minPrice, float maxPrice) {
-                isLoading.setValue(true);
+    public LiveData<Boolean> getIsLoading() {
+        return isLoading;
+    }
 
-                db.collection("products")
-                    .get()
-                    .addOnSuccessListener(queryDocumentSnapshots -> {
-                        List<Product> filteredList = filterProducts(
-                            queryDocumentSnapshots,
-                            query.toLowerCase(),
-                            category,
-                            minPrice,
-                            maxPrice
-                        );
-                        products.setValue(filteredList);
-                        isLoading.setValue(false);
-                    })
-                    .addOnFailureListener(e -> isLoading.setValue(false));
-            }
-
-            private List<Product> filterProducts(QuerySnapshot snapshots, String query,
-                                              String category, float minPrice, float maxPrice) {
+    public void searchProducts(String query, String category, float minPrice, float maxPrice) {
+        isLoading.setValue(true);
+        database.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 List<Product> filteredList = new ArrayList<>();
-
-                for (var document : snapshots) {
-                    Product product = document.toObject(Product.class);
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Product product = snapshot.getValue(Product.class);
                     if (product != null) {
-                        product.setId(document.getId());
-                        boolean matchesSearch = product.getName().toLowerCase().contains(query) ||
-                                             product.getDescription().toLowerCase().contains(query);
-                        boolean matchesCategory = category.equals("All Categories") ||
-                                               product.getCategory().equals(category);
-                        boolean matchesPrice = product.getPrice() >= minPrice &&
-                                             product.getPrice() <= maxPrice;
-
-                        if (matchesSearch && matchesCategory && matchesPrice) {
+                        product.setId(snapshot.getKey());
+                        if (matchesSearchCriteria(product, query, category, minPrice, maxPrice)) {
                             filteredList.add(product);
                         }
                     }
                 }
-                return filteredList;
+                products.setValue(filteredList);
+                isLoading.setValue(false);
             }
-        }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                isLoading.setValue(false);
+            }
+        });
+    }
+
+    private boolean matchesSearchCriteria(Product product, String query, String category, 
+                                        float minPrice, float maxPrice) {
+        boolean matchesQuery = query.isEmpty() || 
+            product.getName().toLowerCase().contains(query.toLowerCase());
+        boolean matchesCategory = category.isEmpty() || 
+            product.getCategory().equals(category);
+        boolean matchesPrice = product.getPrice() >= minPrice && 
+            product.getPrice() <= maxPrice;
+        
+        return matchesQuery && matchesCategory && matchesPrice;
+    }
+}

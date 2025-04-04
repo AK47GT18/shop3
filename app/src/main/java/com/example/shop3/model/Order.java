@@ -8,7 +8,7 @@ public class Order {
     private double total;
 
     public Order() {
-        // Required empty constructor for Firestore
+        // Required empty constructor for Firebase Database
     }
 
     public Order(String id, Date date, double total) {

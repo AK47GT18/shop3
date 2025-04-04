@@ -10,12 +10,19 @@ public class Product {
     private String imageUrl;
     private long timestamp;
 
-    public Product(String name, String description, double price, String category, String imageUrl) {
+    // Required empty constructor for Firebase
+    public Product() {
+        // Required empty constructor for Firebase Realtime Database
+    }
+
+    public Product(String id, String name, String description, double price, String category, String imageUrl) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.category = category;
         this.imageUrl = imageUrl;
+        this.timestamp = System.currentTimeMillis();
     }
 
     public String getId() {
@@ -73,5 +80,4 @@ public class Product {
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
-// Getters and setters
 }
