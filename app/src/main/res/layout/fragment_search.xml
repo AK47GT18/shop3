@@ -4,19 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@android:color/white">
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Search products"
+        app:boxStrokeColor="@android:color/black"
+        app:hintTextColor="@android:color/black"
+        app:startIconTint="@android:color/black"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/searchEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"/>
+            android:inputType="text"
+            android:textColor="@android:color/black"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -24,12 +29,16 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:hint="Category"
+        app:boxStrokeColor="@android:color/black"
+        app:hintTextColor="@android:color/black"
+        app:endIconTint="@android:color/black"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/categorySpinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
@@ -37,15 +46,20 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Price Range"
+        android:textColor="@android:color/black"
         android:textAppearance="?attr/textAppearanceSubtitle1"/>
 
     <com.google.android.material.slider.RangeSlider
-        android:id="@+id/priceRangeSlider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
-        app:labelBehavior="floating" />
+    android:id="@+id/priceRangeSlider"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="16dp"
+    app:labelBehavior="floating"
+    app:thumbColor="@android:color/black"
+    app:trackActiveColor="@color/black"
+    app:trackInactiveColor="@color/darker_gray"
+    app:haloColor="@android:color/black"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/productsRecyclerView"

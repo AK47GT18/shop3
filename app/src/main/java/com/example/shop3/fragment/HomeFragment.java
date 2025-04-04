@@ -11,7 +11,7 @@ package com.example.shop3.fragment;
         import androidx.navigation.Navigation;
         import androidx.recyclerview.widget.GridLayoutManager;
         import androidx.recyclerview.widget.RecyclerView;
-        import com.example.shop3.R;
+                        import com.example.shop3.R;
         import com.example.shop3.Adapter.ProductAdapter;
         import com.example.shop3.model.Product;
         import com.google.android.material.progressindicator.CircularProgressIndicator;

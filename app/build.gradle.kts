@@ -12,7 +12,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.shop3"
+        applicationId = "com.example.storix"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
@@ -38,13 +38,15 @@ android {
 
 dependencies {
     implementation(libs.appcompat)
-    implementation(libs.material)
+//    implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
     implementation(libs.glide)
     implementation("androidx.cardview:cardview:1.0.0")
+    implementation ("com.google.android.material:material:1.12.0")
+    implementation("androidx.appcompat:appcompat:1.6.1")
 
     // AndroidX Lifecycle Components
     implementation(libs.androidx.legacy.support.v4)
@@ -60,6 +62,7 @@ dependencies {
 
     // Lottie Animation
     implementation("com.airbnb.android:lottie:6.6.2")
+    implementation(libs.firebase.storage)
 
     // Testing
     testImplementation(libs.junit)

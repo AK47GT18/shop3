@@ -5,7 +5,7 @@ package com.example.shop3.Adapter;
         import android.view.ViewGroup;
         import androidx.annotation.NonNull;
         import androidx.recyclerview.widget.RecyclerView;
-        import com.example.shop3.R;
+                import com.example.shop3.R;
         import com.example.shop3.model.Product;
         import java.util.List;
 

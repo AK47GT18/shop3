@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
-import com.example.shop3.R;
+        import com.example.shop3.R;
 import com.example.shop3.model.CartItem;
 import com.google.android.material.button.MaterialButton;
 import java.util.ArrayList;

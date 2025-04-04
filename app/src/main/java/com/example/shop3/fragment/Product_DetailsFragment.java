@@ -11,7 +11,7 @@ package com.example.shop3.fragment;
     import androidx.fragment.app.Fragment;
     import androidx.lifecycle.ViewModelProvider;
     import com.bumptech.glide.Glide;
-    import com.example.shop3.R;
+            import com.example.shop3.R;
     import com.example.shop3.model.Product;
     import com.google.android.material.button.MaterialButton;
 

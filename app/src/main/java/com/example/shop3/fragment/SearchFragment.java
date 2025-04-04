@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.shop3.R;
+        import com.example.shop3.R;
 import com.example.shop3.Adapter.ProductAdapter;
 import com.example.shop3.model.Product;
 import com.google.android.material.slider.RangeSlider;

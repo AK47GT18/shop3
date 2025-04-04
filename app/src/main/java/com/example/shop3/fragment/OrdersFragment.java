@@ -11,9 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.shop3.R;
+        import com.example.shop3.R;
 import com.example.shop3.Adapter.OrdersAdapter;
-import com.example.shop3.model.Order;
 
 public class OrdersFragment extends Fragment {
     private RecyclerView ordersRecyclerView;

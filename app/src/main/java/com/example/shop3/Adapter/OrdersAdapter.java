@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.shop3.R;
+                import com.example.shop3.R;
 import com.example.shop3.model.Order;
 import java.util.ArrayList;
 import java.util.List;

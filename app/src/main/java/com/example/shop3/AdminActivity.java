@@ -5,6 +5,7 @@ package com.example.shop3;
     import android.os.Bundle;
     import android.widget.ArrayAdapter;
     import android.widget.Toast;
+    import com.example.shop3.R;
     import androidx.activity.result.ActivityResultLauncher;
     import androidx.activity.result.contract.ActivityResultContracts;
     import androidx.appcompat.app.AppCompatActivity;

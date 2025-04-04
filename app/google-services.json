@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "448628166984",
+    "firebase_url": "https://sto-rix-default-rtdb.firebaseio.com",
+    "project_id": "sto-rix",
+    "storage_bucket": "sto-rix.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:448628166984:android:6e495c8e730441a6fea37d",
+        "android_client_info": {
+          "package_name": "com.example.storix"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbyXiiwdREPTskPWXx0Gj72YKG2JGqc4c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
