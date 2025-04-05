@@ -15,15 +15,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 public class HomeViewModel extends ViewModel {
     private final MutableLiveData<List<Product>> products = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    private final MutableLiveData<String> error = new MutableLiveData<>();
     private final DatabaseReference database;
-    private final String userId;
+    private String userId;
 
     public HomeViewModel() {
-        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            userId = auth.getCurrentUser().getUid();
+        }
         database = FirebaseDatabase.getInstance().getReference();
         loadProducts();
     }
@@ -34,6 +37,10 @@ public class HomeViewModel extends ViewModel {
 
     public LiveData<Boolean> getIsLoading() {
         return isLoading;
+    }
+
+    public LiveData<String> getError() {
+        return error;
     }
 
     public void refreshProducts() {
@@ -60,14 +67,19 @@ public class HomeViewModel extends ViewModel {
                 }
 
                 @Override
-                public void onCancelled(DatabaseError error) {
+                public void onCancelled(DatabaseError databaseError) {
+                    error.setValue(databaseError.getMessage());
                     isLoading.setValue(false);
-                    // Handle error
                 }
             });
     }
 
     public void addToCart(Product product) {
+        if (userId == null) {
+            error.setValue("Please login to add items to cart");
+            return;
+        }
+
         Map<String, Object> cartItem = new HashMap<>();
         cartItem.put("product", product);
         cartItem.put("quantity", 1);
@@ -77,8 +89,9 @@ public class HomeViewModel extends ViewModel {
             .child("cart")
             .push()
             .setValue(cartItem)
-            .addOnFailureListener(e -> {
-                // Handle error
-            });
+            .addOnSuccessListener(unused -> {
+                // Handle success if needed
+            })
+            .addOnFailureListener(e -> error.setValue(e.getMessage()));
     }
 }

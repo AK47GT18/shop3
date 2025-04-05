@@ -10,6 +10,7 @@
         android:name="com.example.shop3.fragment.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home">
+        <!-- Action to navigate from HomeFragment to ProductDetailFragment -->
         <action
             android:id="@+id/action_navigation_home_to_productDetailFragment"
             app:destination="@id/productDetailFragment" />
@@ -20,6 +21,7 @@
         android:name="com.example.shop3.fragment.SearchFragment"
         android:label="Search"
         tools:layout="@layout/fragment_search">
+        <!-- Correct action to navigate from SearchFragment to ProductDetailFragment -->
         <action
             android:id="@+id/action_navigation_search_to_productDetailFragment"
             app:destination="@id/productDetailFragment" />
@@ -30,6 +32,7 @@
         android:name="com.example.shop3.fragment.CartFragment"
         android:label="Cart"
         tools:layout="@layout/fragment_cart">
+        <!-- Action to navigate from CartFragment to CheckoutFragment -->
         <action
             android:id="@+id/action_cartFragment_to_checkoutFragment"
             app:destination="@id/checkoutFragment" />
@@ -40,6 +43,7 @@
         android:name="com.example.shop3.fragment.WishlistFragment"
         android:label="Wishlist"
         tools:layout="@layout/fragment_wishlist">
+        <!-- Action to navigate from WishlistFragment to ProductDetailFragment -->
         <action
             android:id="@+id/action_navigation_wishlist_to_productDetailFragment"
             app:destination="@id/productDetailFragment" />
@@ -54,22 +58,25 @@
     <fragment
         android:id="@+id/productDetailFragment"
         android:name="com.example.shop3.fragment.Product_DetailsFragment"
-        android:label="Product Details"
+        android:label="fragment_product_details"
         tools:layout="@layout/fragment_product__details">
         <action
-            android:id="@+id/action_productDetailFragment_to_cartFragment"
-            app:destination="@id/navigation_cart" />
+            android:id="@+id/action_productDetailFragment_to_navigation_wishlist"
+            app:destination="@id/navigation_wishlist" />
     </fragment>
+
 
     <fragment
         android:id="@+id/checkoutFragment"
         android:name="com.example.shop3.fragment.CheckoutFragment"
         android:label="Checkout"
         tools:layout="@layout/fragment_checkout">
+        <!-- Action to navigate from CheckoutFragment to OrdersFragment -->
         <action
             android:id="@+id/action_checkoutFragment_to_ordersFragment"
             app:destination="@id/navigation_orders"
             app:popUpTo="@id/navigation_cart"
             app:popUpToInclusive="true" />
     </fragment>
+
 </navigation>

@@ -83,6 +83,7 @@
             android:layout_height="wrap_content"
             android:text="Login"
             android:padding="12dp"
+            app:strokeColor="@color/white"
             android:textColor="@android:color/white"
             android:backgroundTint="@android:color/black"/>
 

@@ -47,8 +47,10 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:text="Add to Cart"
-                    android:textColor="@android:color/black"
-                    app:strokeColor="@android:color/black"
+                    android:textColor="@android:color/white"
+                    android:backgroundTint="@color/black"
+                    app:strokeColor="@android:color/white"
+
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
             </LinearLayout>

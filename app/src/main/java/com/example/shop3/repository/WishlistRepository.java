@@ -11,29 +11,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WishlistRepository {
-    private final DatabaseReference database;
+    private final DatabaseReference wishlistRef;
     private final String userId;
+
+    public WishlistRepository() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        this.wishlistRef = database.getReference("wishlists");
+        this.userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    }
 
     public interface WishlistCallback {
         void onSuccess(List<Product> products);
         void onError(Exception e);
     }
 
-    public WishlistRepository() {
-        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        database = FirebaseDatabase.getInstance().getReference()
-            .child("users").child(userId).child("wishlist");
-    }
-
     public void getWishlist(WishlistCallback callback) {
-        database.addListenerForSingleValueEvent(new ValueEventListener() {
+        wishlistRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<Product> products = new ArrayList<>();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Product product = snapshot.getValue(Product.class);
+                for (DataSnapshot productSnapshot : dataSnapshot.getChildren()) {
+                    Product product = productSnapshot.getValue(Product.class);
                     if (product != null) {
-                        product.setId(snapshot.getKey());
                         products.add(product);
                     }
                 }
@@ -41,21 +40,23 @@ public class WishlistRepository {
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
-                callback.onError(error.toException());
+            public void onCancelled(DatabaseError databaseError) {
+                callback.onError(new Exception("Failed to load wishlist: " + databaseError.getMessage()));
             }
         });
     }
 
-    public void removeFromWishlist(Product product, WishlistCallback callback) {
-        database.child(product.getId()).removeValue()
-            .addOnSuccessListener(aVoid -> getWishlist(callback))
-            .addOnFailureListener(callback::onError);
+    public void addToWishlist(Product product, WishlistCallback callback) {
+        wishlistRef.child(userId).child(product.getId())
+                .setValue(product)
+                .addOnSuccessListener(aVoid -> callback.onSuccess(null))
+                .addOnFailureListener(e -> callback.onError(e));
     }
 
-    public void addToWishlist(Product product, WishlistCallback callback) {
-        database.child(product.getId()).setValue(product)
-            .addOnSuccessListener(aVoid -> getWishlist(callback))
-            .addOnFailureListener(callback::onError);
+    public void removeFromWishlist(Product product, WishlistCallback callback) {
+        wishlistRef.child(userId).child(product.getId())
+                .removeValue()
+                .addOnSuccessListener(aVoid -> callback.onSuccess(null))
+                .addOnFailureListener(e -> callback.onError(e));
     }
 }

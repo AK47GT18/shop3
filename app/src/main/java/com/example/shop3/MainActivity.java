@@ -1,6 +1,9 @@
 package com.example.shop3;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -27,7 +30,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_main);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         initViews();
         setupNavigation();
@@ -40,11 +53,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupSearchView() {
-        searchView.setOnClickListener(v -> {
-            if (navController != null) {
-                navController.navigate(R.id.navigation_search);
-            }
-        });
+        if (searchView != null) {
+            searchView.setOnClickListener(v -> {
+                if (navController != null) {
+                    navController.navigate(R.id.navigation_search);
+                }
+            });
+        }
     }
 
     private void setupNavigation() {
@@ -58,34 +73,47 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupCartBadge() {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() != null) {
-            BadgeDrawable badge = bottomNavigation.getOrCreateBadge(R.id.navigation_cart);
-            badge.setVisible(false);
+        if (bottomNavigation == null || mAuth.getCurrentUser() == null) {
+            return;
+        }
 
-            DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference()
-                .child("users")
-                .child(auth.getCurrentUser().getUid())
-                .child("cart");
+        BadgeDrawable badge = bottomNavigation.getOrCreateBadge(R.id.navigation_cart);
+        badge.setVisible(false);
 
-            cartRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+        DatabaseReference cartRef = mDatabase
+            .child("users")
+            .child(mAuth.getCurrentUser().getUid())
+            .child("cart");
+
+        cartRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (bottomNavigation != null) {
                     int count = (int) dataSnapshot.getChildrenCount();
                     badge.setVisible(count > 0);
                     badge.setNumber(count);
                 }
+            }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    // Handle error
-                }
-            });
-        }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Log the error
+                Log.e("MainActivity", "Error getting cart items", databaseError.toException());
+            }
+        });
     }
 
     @Override
     public boolean onSupportNavigateUp() {
         return navController != null && navController.navigateUp() || super.onSupportNavigateUp();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mAuth.getCurrentUser() == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
     }
 }

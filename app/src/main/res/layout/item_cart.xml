@@ -52,8 +52,10 @@
                      android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
                      android:text="Remove"
+                     android:backgroundTint="@color/black"
+                     app:strokeColor="@color/white"
                      android:textSize="12sp"
-                     android:textColor="@android:color/black"
+                     android:textColor="@android:color/white"
                      style="@style/Widget.MaterialComponents.Button.TextButton"
                      app:layout_constraintEnd_toEndOf="parent"
                      app:layout_constraintTop_toTopOf="parent"/>
@@ -76,8 +78,9 @@
                          android:insetBottom="0dp"
                          android:padding="0dp"
                          app:icon="@drawable/ic_remove"
-                         app:iconTint="@android:color/black"
-                         app:strokeColor="@android:color/black"
+                         android:backgroundTint="@color/black"
+                         app:iconTint="@android:color/white"
+                         app:strokeColor="@android:color/white"
                          style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
                      <TextView
@@ -99,9 +102,9 @@
                          android:insetBottom="0dp"
                          android:padding="0dp"
                          app:icon="@drawable/ic_add"
-                         app:iconTint="@android:color/black"
-                         app:strokeColor="@android:color/black"
-                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+                         app:iconTint="@android:color/white"
+                         android:backgroundTint="@android:color/black"
+                         style="@style/Widget.MaterialComponents.Button"/>
                  </LinearLayout>
              </androidx.constraintlayout.widget.ConstraintLayout>
          </com.google.android.material.card.MaterialCardView>

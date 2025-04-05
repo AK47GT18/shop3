@@ -7,6 +7,13 @@
     android:padding="16dp"
     android:background="@android:color/white">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Search Products"
+        android:textColor="@android:color/black"
+        android:textAppearance="?attr/textAppearanceHeadline6"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,6 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
+            android:imeOptions="actionSearch"
             android:textColor="@android:color/black"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -38,34 +46,54 @@
             android:id="@+id/categorySpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="none"
             android:textColor="@android:color/black"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Price Range"
-        android:textColor="@android:color/black"
-        android:textAppearance="?attr/textAppearanceSubtitle1"/>
+        android:layout_marginTop="8dp"
+        android:hint="Maximum Price"
+        app:boxStrokeColor="@android:color/black"
+        app:hintTextColor="@android:color/black"
+        app:startIconTint="@android:color/black"
+        app:prefixText="MWK"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-    <com.google.android.material.slider.RangeSlider
-    android:id="@+id/priceRangeSlider"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="16dp"
-    app:labelBehavior="floating"
-    app:thumbColor="@android:color/black"
-    app:trackActiveColor="@color/black"
-    app:trackInactiveColor="@color/darker_gray"
-    app:haloColor="@android:color/black"/>
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/priceEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:imeOptions="actionSearch"
+            android:textColor="@android:color/black"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/searchButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Search"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/black"
+        app:strokeColor="@android:color/white"/>
+
+    <ProgressBar
+        android:id="@+id/progressIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        style="?android:attr/progressBarStyleLarge"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/productsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:layout_marginTop="8dp"
         android:clipToPadding="false"/>
 
 </LinearLayout>

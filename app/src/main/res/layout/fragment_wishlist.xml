@@ -1,36 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/white">
+     <androidx.coordinatorlayout.widget.CoordinatorLayout
+         xmlns:android="http://schemas.android.com/apk/res/android"
+         xmlns:app="http://schemas.android.com/apk/res-auto"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:background="@android:color/white">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/wishlistRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="8dp"
-                android:clipToPadding="false"/>
+         <androidx.constraintlayout.widget.ConstraintLayout
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
-            <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:id="@+id/progressIndicator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:indeterminate="true"
-                android:visibility="gone"
-                app:indicatorColor="@android:color/black"/>
+             <TextView
+                 android:id="@+id/wishlistTitle"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:text="Wishlist"
+                 android:textSize="24sp"
+                 android:textStyle="bold"
+                 android:textColor="@android:color/black"
+                 android:layout_marginTop="16dp"
+                 app:layout_constraintTop_toTopOf="parent"
+                 app:layout_constraintStart_toStartOf="parent"
+                 app:layout_constraintEnd_toEndOf="parent"/>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/removeFromWishlistButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="Remove from Wishlist"
-                android:textColor="@android:color/black"
-                app:strokeColor="@android:color/black"
-                android:layout_gravity="bottom"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+             <androidx.recyclerview.widget.RecyclerView
+                 android:id="@+id/wishlistRecyclerView"
+                 android:layout_width="match_parent"
+                 android:layout_height="0dp"
+                 android:padding="8dp"
+                 android:clipToPadding="false"
+                 android:layout_marginTop="8dp"
+                 app:layout_constraintTop_toBottomOf="@id/wishlistTitle"
+                 app:layout_constraintBottom_toTopOf="@id/removeFromWishlistButton"/>
 
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+             <com.google.android.material.progressindicator.CircularProgressIndicator
+                 android:id="@+id/progressIndicator"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:indeterminate="true"
+                 android:visibility="gone"
+                 app:indicatorColor="@android:color/black"
+                 app:layout_constraintTop_toTopOf="parent"
+                 app:layout_constraintBottom_toBottomOf="parent"
+                 app:layout_constraintStart_toStartOf="parent"
+                 app:layout_constraintEnd_toEndOf="parent"/>
+
+             <com.google.android.material.button.MaterialButton
+                 android:id="@+id/removeFromWishlistButton"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_margin="16dp"
+                 android:text="Remove from Wishlist"
+                 android:textColor="@android:color/white"
+                 android:backgroundTint="@android:color/black"
+                 app:layout_constraintBottom_toBottomOf="parent"
+                 app:layout_constraintStart_toStartOf="parent"
+                 app:layout_constraintEnd_toEndOf="parent"/>
+
+         </androidx.constraintlayout.widget.ConstraintLayout>
+     </androidx.coordinatorlayout.widget.CoordinatorLayout>

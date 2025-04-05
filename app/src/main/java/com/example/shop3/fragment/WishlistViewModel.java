@@ -12,6 +12,8 @@ public class WishlistViewModel extends ViewModel {
     private final MutableLiveData<List<Product>> wishlist = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
+    private final MutableLiveData<String> successMessage = new MutableLiveData<>();
+
     private final WishlistRepository wishlistRepository;
     private final CartRepository cartRepository;
 
@@ -33,7 +35,11 @@ public class WishlistViewModel extends ViewModel {
         return errorMessage;
     }
 
-    public void loadWishlist() {
+    public LiveData<String> getSuccessMessage() {
+        return successMessage;
+    }
+
+    private void loadWishlist() {
         isLoading.setValue(true);
         wishlistRepository.getWishlist(new WishlistRepository.WishlistCallback() {
             @Override
@@ -44,8 +50,8 @@ public class WishlistViewModel extends ViewModel {
 
             @Override
             public void onError(Exception e) {
+                errorMessage.setValue("Failed to load wishlist: " + e.getMessage());
                 isLoading.setValue(false);
-                errorMessage.setValue(e.getMessage());
             }
         });
     }
@@ -56,13 +62,14 @@ public class WishlistViewModel extends ViewModel {
             @Override
             public void onSuccess(List<Product> products) {
                 wishlist.setValue(products);
+                successMessage.setValue("Product removed from wishlist");
                 isLoading.setValue(false);
             }
 
             @Override
             public void onError(Exception e) {
+                errorMessage.setValue("Failed to remove product: " + e.getMessage());
                 isLoading.setValue(false);
-                errorMessage.setValue(e.getMessage());
             }
         });
     }
@@ -72,13 +79,15 @@ public class WishlistViewModel extends ViewModel {
         cartRepository.addToCart(product, 1, new CartRepository.CartCallback() {
             @Override
             public void onSuccess() {
+                successMessage.setValue("Product added to cart");
+                removeFromWishlist(product);  // Remove the product from wishlist after adding it to the cart
                 isLoading.setValue(false);
             }
 
             @Override
             public void onError(Exception e) {
+                errorMessage.setValue("Failed to add to cart: " + e.getMessage());
                 isLoading.setValue(false);
-                errorMessage.setValue(e.getMessage());
             }
         });
     }

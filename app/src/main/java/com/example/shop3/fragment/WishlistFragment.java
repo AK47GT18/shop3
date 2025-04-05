@@ -12,21 +12,20 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.shop3.R;
-import com.example.shop3.Adapter.ProductAdapter;
+import com.example.shop3.Adapter.WishlistAdapter;
 import com.example.shop3.factory.ViewModelFactory;
 import com.example.shop3.model.Product;
 import com.example.shop3.repository.CartRepository;
 import com.example.shop3.repository.WishlistRepository;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
-
 import java.util.ArrayList;
 
-public class WishlistFragment extends Fragment implements ProductAdapter.OnProductClickListener {
+public class WishlistFragment extends Fragment implements WishlistAdapter.OnWishlistItemClickListener {
     private RecyclerView wishlistRecyclerView;
     private CircularProgressIndicator progressIndicator;
     private WishlistViewModel viewModel;
-    private ProductAdapter adapter;
+    private WishlistAdapter adapter;
     private View rootView;
 
     @Nullable
@@ -46,8 +45,8 @@ public class WishlistFragment extends Fragment implements ProductAdapter.OnProdu
     }
 
     private void setupRecyclerView() {
-        adapter = new ProductAdapter(new ArrayList<>());
-        adapter.setOnProductClickListener(this);
+        adapter = new WishlistAdapter(new ArrayList<>());
+        adapter.setOnWishlistItemClickListener(this);
         wishlistRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         wishlistRecyclerView.setAdapter(adapter);
     }
@@ -67,6 +66,18 @@ public class WishlistFragment extends Fragment implements ProductAdapter.OnProdu
 
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading ->
             progressIndicator.setVisibility(isLoading ? View.VISIBLE : View.GONE));
+
+        viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
+            if (error != null) {
+                Snackbar.make(rootView, error, Snackbar.LENGTH_LONG).show();
+            }
+        });
+
+        viewModel.getSuccessMessage().observe(getViewLifecycleOwner(), message -> {
+            if (message != null) {
+                Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -75,5 +86,15 @@ public class WishlistFragment extends Fragment implements ProductAdapter.OnProdu
         args.putString("productId", product.getId());
         Navigation.findNavController(requireView())
             .navigate(R.id.action_navigation_wishlist_to_productDetailFragment, args);
+    }
+
+    @Override
+    public void onRemoveClick(Product product) {
+        viewModel.removeFromWishlist(product);
+    }
+
+    @Override
+    public void onAddToCartClick(Product product) {
+        viewModel.addToCart(product);  // Add the product to the cart
     }
 }

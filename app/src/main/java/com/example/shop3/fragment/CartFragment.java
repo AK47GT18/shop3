@@ -84,7 +84,7 @@ package com.example.shop3.fragment;
                 for (CartItem item : cartItems) {
                     total += item.getProduct().getPrice() * item.getQuantity();
                 }
-                totalPriceText.setText(String.format("Total: $%.2f", total));
+                totalPriceText.setText(String.format("Total:MWK%.2f", total));
                 checkoutButton.setEnabled(!cartItems.isEmpty());
             }
 
