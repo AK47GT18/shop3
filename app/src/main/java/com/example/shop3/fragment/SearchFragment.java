@@ -156,7 +156,6 @@ public class SearchFragment extends Fragment implements ProductAdapter.OnProduct
             }
         });
     }
-
     @Override
     public void onProductClick(Product product) {
         Bundle args = new Bundle();
